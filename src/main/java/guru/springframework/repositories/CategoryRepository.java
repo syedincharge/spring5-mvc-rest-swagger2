@@ -2,10 +2,10 @@ package guru.springframework.repositories;
 
 import guru.springframework.domain.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-// spring data and H2 DB
-
+@Repository
 public interface CategoryRepository extends JpaRepository<Category, Long> {
 
-    Category findByLastName(String name);
+    Category findCategoryByName(String name);
 }

@@ -51,7 +51,7 @@ class CategoryServiceImplTest {
         cat.setId(1L);
         cat.setName(NAME);
 
-        when(categoryRepository.findByLastName(anyString())).thenReturn(cat);
+        when(categoryRepository.findCategoryByName(anyString())).thenReturn(cat);
 
         CategoryDTO categoryDTO = categoryService.getCategoryByName(NAME);
 
