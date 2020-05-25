@@ -6,17 +6,17 @@ import guru.springframework.domain.Customer;
 import guru.springframework.repositories.CustomerRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import static org.hamcrest.Matchers.any;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
 class CustomerServiceImplTest {
@@ -25,6 +25,7 @@ class CustomerServiceImplTest {
     public static final long ID1 = 2L;
     public static final String FIRST_NAME = "Lior";
     public static final String FIRST_NAME1 = "Meitar";
+    public static final String LAST_NAME = "Lavon";
     CustomerService customerService;
 
     @Mock
@@ -62,7 +63,7 @@ class CustomerServiceImplTest {
         // given
         Customer cus1 = Customer.builder().id(ID).firstName(FIRST_NAME).build();
 
-        when(customerRepository.findById(ID)).thenReturn(Optional.of(cus1));
+        when(customerRepository.findById(anyLong())).thenReturn(Optional.of(cus1));
 
         //when
         CustomerDTO customerDTO = customerService.getById(ID);
@@ -72,4 +73,21 @@ class CustomerServiceImplTest {
         assertEquals(FIRST_NAME, customerDTO.getFirstName());
     }
 
+    @Test
+    void createNewCustomer() {
+
+        // given
+        CustomerDTO customerDTO = CustomerDTO.builder().firstName(FIRST_NAME).lastName(LAST_NAME).build();
+
+        Customer savedCustomer = Customer.builder().id(1L).firstName(FIRST_NAME).lastName(LAST_NAME).build();
+
+        when(customerRepository.save(ArgumentMatchers.any())).thenReturn(savedCustomer);
+
+        // when
+        CustomerDTO savedDTOCustomer = customerService.createNewCustomer(customerDTO);
+
+        // then
+        assertEquals(FIRST_NAME, savedDTOCustomer.getFirstName());
+        assertEquals("http://Lior.Lavon.com", savedDTOCustomer.getCustomer_url());
+    }
 }
