@@ -1,6 +1,7 @@
 package guru.springframework.controllers.v1;
 
 import guru.springframework.api.v1.model.CustomerDTO;
+import guru.springframework.domain.Customer;
 import guru.springframework.services.CustomerService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,8 +20,10 @@ import java.util.List;
 
 import static guru.springframework.controllers.v1.AbstractRestControllerTest.asJsonString;
 import static org.hamcrest.Matchers.*;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -32,6 +35,8 @@ class CustomerControllerTest {
     public static final String FIRST_NAME = "Lior";
     public static final String FIRST_NAME1 = "Meitar";
     public static final String LAST_NAME = "Lavon";
+    public static final String LIOR_V_1 = "Lior_v1";
+    public static final String LAVON_V_1 = "Lavon_v1";
 
     @InjectMocks
     CustomerController customerController;
@@ -90,7 +95,7 @@ class CustomerControllerTest {
         CustomerDTO customerDTO = CustomerDTO.builder().firstName(FIRST_NAME).lastName(LAST_NAME).build();
         CustomerDTO returnCustomerDTO = CustomerDTO.builder().id(1L).firstName(FIRST_NAME).lastName(LAST_NAME).build();
 
-        when(customerService.createNewCustomer(ArgumentMatchers.any())).thenReturn(returnCustomerDTO);
+        when(customerService.createCustomer(ArgumentMatchers.any())).thenReturn(returnCustomerDTO);
 
         //String stringValue = ;
         mockMvc.perform(post("/api/v1/customers")
@@ -99,24 +104,29 @@ class CustomerControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.firstName", equalTo(FIRST_NAME)))
                 .andExpect(jsonPath("$.lastName", equalTo(LAST_NAME)));
+        //.andReturn().getResponse().getContentAsString();
 
     }
 
     @Test
-    void createNewToDo() throws Exception {
+    void updateExistingCustomer() throws Exception {
 
-        CustomerDTO customer = CustomerDTO.builder().firstName("Lior").lastName("Lavon").build();
-        CustomerDTO returnCustomerDTO = CustomerDTO.builder().id(1L).firstName("Lior").lastName("Lavon").build();
+        CustomerDTO existCustomerDTO = CustomerDTO.builder().id(1L).firstName(FIRST_NAME).lastName(LAST_NAME).build();
 
-        when(customerService.createNewCustomer(ArgumentMatchers.any())).thenReturn(returnCustomerDTO);
+        CustomerDTO customerDTOToUpdate = CustomerDTO.builder().id(1L).firstName(LIOR_V_1).lastName(LAVON_V_1).build();
 
-        mockMvc.perform(post("/api/v1/customers")
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(asJsonString(customer)))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.firstName", equalTo("Lior")))
-                .andExpect(jsonPath("$.lastName", equalTo("Lavon")));
-                //.andReturn().getResponse().getContentAsString();
+        when(customerService.getById(anyLong())).thenReturn(existCustomerDTO);
+
+        when(customerService.updateCustomer(ArgumentMatchers.any(), ArgumentMatchers.any(CustomerDTO.class))).thenReturn(customerDTOToUpdate);
+
+        //String stringValue = ;
+        mockMvc.perform(put("/api/v1/customers/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(customerDTOToUpdate)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.firstName", equalTo(LIOR_V_1)))
+                .andExpect(jsonPath("$.lastName", equalTo(LAVON_V_1)));
+        //.andReturn().getResponse().getContentAsString();
 
     }
 

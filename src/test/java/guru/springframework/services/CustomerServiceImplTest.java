@@ -84,7 +84,7 @@ class CustomerServiceImplTest {
         when(customerRepository.save(ArgumentMatchers.any())).thenReturn(savedCustomer);
 
         // when
-        CustomerDTO savedDTOCustomer = customerService.createNewCustomer(customerDTO);
+        CustomerDTO savedDTOCustomer = customerService.createCustomer(customerDTO);
 
         // then
         assertEquals(FIRST_NAME, savedDTOCustomer.getFirstName());
