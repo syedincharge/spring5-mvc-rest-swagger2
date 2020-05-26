@@ -1,4 +1,4 @@
-package guru.springframework.spring5mvcrest;
+package guru.springframework;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -7,7 +7,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
-@ComponentScan(basePackages = {"guru.*"})
+//@ComponentScan(basePackages = {"guru.*"})
 @EntityScan(basePackages = {"guru.*"})
 @EnableJpaRepositories(basePackages = {"guru.*"})
 public class Spring5MvcRestApplication {
