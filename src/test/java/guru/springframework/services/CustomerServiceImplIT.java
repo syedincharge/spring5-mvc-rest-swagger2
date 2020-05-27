@@ -6,18 +6,13 @@ import guru.springframework.bootstrap.Bootstrap;
 import guru.springframework.domain.Customer;
 import guru.springframework.repositories.CategoryRepository;
 import guru.springframework.repositories.CustomerRepository;
+import guru.springframework.repositories.VendorRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.not;
 import static org.junit.Assert.*;
@@ -32,6 +27,9 @@ class CustomerServiceImplIT {
     @Autowired
     CustomerRepository customerRepository;
 
+    @Autowired
+    VendorRepository vendorRepository;
+
     CustomerServiceImpl customerService;
 
     @BeforeEach
@@ -39,7 +37,7 @@ class CustomerServiceImplIT {
 
         System.out.println("Loading Bootstrap content");
 
-        Bootstrap bootstrap = new Bootstrap(categoryRepository, customerRepository);
+        Bootstrap bootstrap = new Bootstrap(categoryRepository, customerRepository, vendorRepository);
         bootstrap.run();
 
         customerService = new CustomerServiceImpl(CustomerMapper.INSTANCE, customerRepository);
