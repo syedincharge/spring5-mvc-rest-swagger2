@@ -3,12 +3,16 @@ package guru.springframework.controllers.v1;
 import guru.springframework.api.v1.model.CategoryDTO;
 import guru.springframework.domain.Category;
 import guru.springframework.services.CategoryService;
+import org.h2.security.auth.ConfigProperties;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MockMvcBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -27,6 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class CategoryControllerTest {
 
     public static final String NAME = "Joe";
+
     @Mock
     CategoryService categoryService;
 
@@ -61,7 +66,7 @@ class CategoryControllerTest {
 
         when(categoryService.getAllCategories()).thenReturn(categoryList);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/categories/")
+        mockMvc.perform(MockMvcRequestBuilders.get(CategoryController.BASE_URL)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.categories", hasSize(2)));
@@ -80,7 +85,7 @@ class CategoryControllerTest {
 
         when(categoryService.getCategoryByName(anyString())).thenReturn(cat1);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/categories/" + NAME)
+        mockMvc.perform(MockMvcRequestBuilders.get(CategoryController.BASE_URL + "/" + NAME)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name", equalTo(NAME)));
