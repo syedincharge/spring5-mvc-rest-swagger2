@@ -90,7 +90,12 @@ public class CustomerServiceImpl implements CustomerService {
 
                     return appendUrl(returnCustomerDTO);
                 }).orElseThrow(RuntimeException::new);
-    };
+    }
+
+    @Override
+    public void deleteCustomerById(Long id) {
+        customerRepository.deleteById(id);
+    }
 
     CustomerDTO appendUrl(CustomerDTO customerDTO){
 

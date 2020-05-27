@@ -150,4 +150,13 @@ class CustomerControllerTest {
 
 
     }
+
+    @Test
+    void deleteById() throws Exception {
+
+        mockMvc.perform(delete("/api/v1/customers/1")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
 }

@@ -15,9 +15,10 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.Matchers.any;
+import static org.hamcrest.Matchers.empty;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class CustomerServiceImplTest {
 
@@ -91,4 +92,12 @@ class CustomerServiceImplTest {
         assertEquals("http://Lior.Lavon.com", savedDTOCustomer.getCustomer_url());
     }
 
+    @Test
+    void deleteCustomerById() {
+
+        Long id = 1L;
+        customerRepository.deleteById(id);
+
+        verify(customerRepository, times(1)).deleteById(anyLong());
+    }
 }
