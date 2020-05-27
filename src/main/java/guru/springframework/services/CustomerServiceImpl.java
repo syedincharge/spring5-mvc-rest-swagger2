@@ -26,10 +26,7 @@ public class CustomerServiceImpl implements CustomerService {
                 .stream()
                 .map(customer -> {
                     CustomerDTO customerDTO = customerMapper.customerToCustomerDTO(customer);
-                    customerDTO.setCustomer_url("http://" +
-                            customerDTO.getFirstName() +
-                            "." +
-                            customerDTO.getLastName() + ".com");
+                    customerDTO = appendUrl(customerDTO);
                     return customerDTO;
                 })
                 .collect(Collectors.toList());
@@ -41,10 +38,7 @@ public class CustomerServiceImpl implements CustomerService {
         return customerRepository.findById(id)
                 .map(customer -> {
                     CustomerDTO customerDTO = customerMapper.customerToCustomerDTO(customer);
-                    customerDTO.setCustomer_url("http://" +
-                    customer.getFirstName() +
-                    "." +
-                    customer.getLastName() + ".com");
+                    customerDTO = appendUrl(customerDTO);
                     return customerDTO;
                 })
                 .orElseThrow(RuntimeException::new);
@@ -71,10 +65,7 @@ public class CustomerServiceImpl implements CustomerService {
         Customer savedCustomer = customerRepository.save(customer);
         CustomerDTO savedCustomerDTO = customerMapper.customerToCustomerDTO(savedCustomer);
 
-        savedCustomerDTO.setCustomer_url("http://" +
-                customer.getFirstName() +
-                "." +
-                customer.getLastName() + ".com");
+        savedCustomerDTO = appendUrl(savedCustomerDTO);
 
         return savedCustomerDTO;
     }
@@ -93,9 +84,23 @@ public class CustomerServiceImpl implements CustomerService {
                         customer.setLastName(customerDTO.getLastName());
                     }
 
-                    return customerMapper.customerToCustomerDTO(customer);
+                    Customer savedCustomer = customerRepository.save(customer);
+
+                    CustomerDTO returnCustomerDTO = customerMapper.customerToCustomerDTO(savedCustomer);
+
+                    return appendUrl(returnCustomerDTO);
                 }).orElseThrow(RuntimeException::new);
     };
+
+    CustomerDTO appendUrl(CustomerDTO customerDTO){
+
+        customerDTO.setCustomer_url("http://" +
+                customerDTO.getFirstName() +
+                "." +
+                customerDTO.getLastName() + ".com");
+
+        return customerDTO;
+    }
 
 
 }

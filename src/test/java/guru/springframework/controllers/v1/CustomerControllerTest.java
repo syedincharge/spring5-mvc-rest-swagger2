@@ -22,8 +22,7 @@ import static guru.springframework.controllers.v1.AbstractRestControllerTest.asJ
 import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -37,6 +36,7 @@ class CustomerControllerTest {
     public static final String LAST_NAME = "Lavon";
     public static final String LIOR_V_1 = "Lior_v1";
     public static final String LAVON_V_1 = "Lavon_v1";
+    public static final String NEW_VALUE = "NewValue";
 
     @InjectMocks
     CustomerController customerController;
@@ -115,8 +115,6 @@ class CustomerControllerTest {
 
         CustomerDTO customerDTOToUpdate = CustomerDTO.builder().id(1L).firstName(LIOR_V_1).lastName(LAVON_V_1).build();
 
-        when(customerService.getById(anyLong())).thenReturn(existCustomerDTO);
-
         when(customerService.updateCustomer(ArgumentMatchers.any(), ArgumentMatchers.any(CustomerDTO.class))).thenReturn(customerDTOToUpdate);
 
         //String stringValue = ;
@@ -130,4 +128,26 @@ class CustomerControllerTest {
 
     }
 
+    @Test
+    void patchExistingCustomer() throws Exception {
+
+        CustomerDTO customerDTO = CustomerDTO.builder().firstName(NEW_VALUE).build();
+
+        CustomerDTO returnedCustomerDTO = CustomerDTO.builder().id(ID).firstName(NEW_VALUE).lastName(LAST_NAME).build();
+
+        when(customerService.patchCustomer(ArgumentMatchers.any(), ArgumentMatchers.any(CustomerDTO.class))).thenReturn(returnedCustomerDTO);
+
+        //String stringValue = ;
+        mockMvc.perform(patch("/api/v1/customers/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(customerDTO)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", equalTo(1)))
+                .andExpect(jsonPath("$.firstName", equalTo(NEW_VALUE)))
+                .andExpect(jsonPath("$.lastName", equalTo(LAST_NAME)));
+
+//                .andReturn().getResponse().getContentAsString();
+
+
+    }
 }
