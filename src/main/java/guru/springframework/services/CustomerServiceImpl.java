@@ -2,12 +2,14 @@ package guru.springframework.services;
 
 import guru.springframework.api.v1.mapper.CustomerMapper;
 import guru.springframework.api.v1.model.CustomerDTO;
+import guru.springframework.controllers.v1.RestResponseEntityExceptionHandler;
 import guru.springframework.domain.Customer;
 import guru.springframework.repositories.CustomerRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -42,7 +44,7 @@ public class CustomerServiceImpl implements CustomerService {
                     customerDTO = appendUrl(customerDTO);
                     return customerDTO;
                 })
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(ResourceNotFoundException::new);
     }
 
     @Override
@@ -90,12 +92,19 @@ public class CustomerServiceImpl implements CustomerService {
                     CustomerDTO returnCustomerDTO = customerMapper.customerToCustomerDTO(savedCustomer);
 
                     return appendUrl(returnCustomerDTO);
-                }).orElseThrow(RuntimeException::new);
+                }).orElseThrow(ResourceNotFoundException::new);
     }
 
     @Override
     public void deleteCustomerById(Long id) {
-        customerRepository.deleteById(id);
+
+        Optional<Customer> customerOptional = customerRepository.findById(id);
+        if(customerOptional.isPresent()){
+            customerRepository.deleteById(id);
+        }
+        else
+            throw new ResourceNotFoundException();
+
     }
 
     CustomerDTO appendUrl(CustomerDTO customerDTO){

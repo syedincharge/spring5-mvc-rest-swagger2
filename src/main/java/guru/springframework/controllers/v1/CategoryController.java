@@ -9,13 +9,11 @@ import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping(CategoryController.BASE_URL)
 public class CategoryController {
 
@@ -28,18 +26,19 @@ public class CategoryController {
     }
 
     @GetMapping("")
-    public ResponseEntity<CategoryListDTO> getAll(){
+    @ResponseStatus(HttpStatus.OK)
+    public CategoryListDTO getAll(){
 
         List<CategoryDTO> categoryDTOList = categoryService.getAllCategories();
-        CategoryListDTO categoryListDTO = new CategoryListDTO(categoryDTOList);
-        return new ResponseEntity<>(categoryListDTO, HttpStatus.OK);
+        return new CategoryListDTO(categoryDTOList);
     }
 
     @GetMapping("/{name}")
-    public ResponseEntity<CategoryDTO> findByName(@PathVariable String name){
+    @ResponseStatus(HttpStatus.OK)
+    public CategoryDTO findByName(@PathVariable String name){
 
         CategoryDTO categoryDTO = categoryService.getCategoryByName(name);
-        return new ResponseEntity<>(categoryDTO, HttpStatus.OK);
+        return categoryDTO;
     }
 
 }
