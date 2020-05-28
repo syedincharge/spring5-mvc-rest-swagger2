@@ -2,9 +2,11 @@ package guru.springframework.bootstrap;
 
 import guru.springframework.domain.Category;
 import guru.springframework.domain.Customer;
+import guru.springframework.domain.Product;
 import guru.springframework.domain.Vendor;
 import guru.springframework.repositories.CategoryRepository;
 import guru.springframework.repositories.CustomerRepository;
+import guru.springframework.repositories.ProductRepository;
 import guru.springframework.repositories.VendorRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
@@ -17,11 +19,13 @@ public class Bootstrap implements CommandLineRunner{
     private final CategoryRepository categoryRepository;
     private final CustomerRepository customerRepository;
     private final VendorRepository vendorRepository;
+    private  final ProductRepository productRepository;
 
-    public Bootstrap(CategoryRepository categoryRepository, CustomerRepository customerRepository, VendorRepository vendorRepository) {
+    public Bootstrap(CategoryRepository categoryRepository, CustomerRepository customerRepository, VendorRepository vendorRepository, ProductRepository productRepository) {
         this.categoryRepository = categoryRepository;
         this.customerRepository = customerRepository;
         this.vendorRepository = vendorRepository;
+        this.productRepository = productRepository;
     }
 
     @Override
@@ -32,6 +36,8 @@ public class Bootstrap implements CommandLineRunner{
         LoadCustomers();
 
         LoadVendors();
+
+        LoadProducts();
 
     }
 
@@ -78,18 +84,22 @@ public class Bootstrap implements CommandLineRunner{
 
         Vendor v2 = Vendor.builder().name("Exotic Fruits Company").build();
 
-        Vendor v3 = Vendor.builder().name("Home Fruits").build();
-
-        Vendor v4 = Vendor.builder().name("Fun Fresh Fruits Ltd.").build();
-
-        Vendor v5 = Vendor.builder().name("Nuts for Nuts Company").build();
-
         vendorRepository.save(v1);
         vendorRepository.save(v2);
-        vendorRepository.save(v3);
-        vendorRepository.save(v4);
-        vendorRepository.save(v5);
 
         log.info("Vendors Loader finished : " + vendorRepository.count());
+    }
+
+    private void LoadProducts(){
+
+        Product product1 = Product.builder().name("Pineapples").build();
+        Product product2 = Product.builder().name("Apples").build();
+        Product product3 = Product.builder().name("Oranges").build();
+
+        productRepository.save(product1);
+        productRepository.save(product2);
+        productRepository.save(product3);
+
+        log.info("Products Loader finished : " + productRepository.count());
     }
 }

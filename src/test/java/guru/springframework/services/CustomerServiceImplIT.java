@@ -6,6 +6,7 @@ import guru.springframework.bootstrap.Bootstrap;
 import guru.springframework.domain.Customer;
 import guru.springframework.repositories.CategoryRepository;
 import guru.springframework.repositories.CustomerRepository;
+import guru.springframework.repositories.ProductRepository;
 import guru.springframework.repositories.VendorRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,6 +31,9 @@ class CustomerServiceImplIT {
     @Autowired
     VendorRepository vendorRepository;
 
+    @Autowired
+    ProductRepository productRepository;
+
     CustomerServiceImpl customerService;
 
     @BeforeEach
@@ -37,7 +41,7 @@ class CustomerServiceImplIT {
 
         System.out.println("Loading Bootstrap content");
 
-        Bootstrap bootstrap = new Bootstrap(categoryRepository, customerRepository, vendorRepository);
+        Bootstrap bootstrap = new Bootstrap(categoryRepository, customerRepository, vendorRepository, productRepository);
         bootstrap.run();
 
         customerService = new CustomerServiceImpl(CustomerMapper.INSTANCE, customerRepository);
