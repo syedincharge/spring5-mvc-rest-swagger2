@@ -12,6 +12,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 @Slf4j
 @Component
 public class Bootstrap implements CommandLineRunner{
@@ -39,6 +44,10 @@ public class Bootstrap implements CommandLineRunner{
 
         LoadProducts();
 
+        SetProductCategories();
+
+        SetVendorProducts();
+
     }
 
     private void LoadCustomers() {
@@ -55,7 +64,7 @@ public class Bootstrap implements CommandLineRunner{
 
     private void LoadCategories() {
         Category fruit = new Category();
-        fruit.setName("Fruits");
+        fruit.setName("Fruit");
 
         Category dried = new Category();
         dried.setName("Dried");
@@ -81,7 +90,6 @@ public class Bootstrap implements CommandLineRunner{
     private void LoadVendors(){
 
         Vendor v1 = Vendor.builder().name("Western Tasty Fruits Ltd.").build();
-
         Vendor v2 = Vendor.builder().name("Exotic Fruits Company").build();
 
         vendorRepository.save(v1);
@@ -101,5 +109,41 @@ public class Bootstrap implements CommandLineRunner{
         productRepository.save(product3);
 
         log.info("Products Loader finished : " + productRepository.count());
+    }
+
+    private void SetProductCategories(){
+
+        // load Category
+        Category fruit = categoryRepository.findCategoryByName("Fruit");
+        Category dried = categoryRepository.findCategoryByName("Dried");
+        Set<Category> categorySet = new HashSet<>(Arrays.asList(fruit, dried));
+
+        // load Product
+        Product pineapples = productRepository.findProductByName("Pineapples");
+        pineapples.setCategories(categorySet);
+
+        Product apples = productRepository.findProductByName("Apples");
+        apples.getCategories().add(categoryRepository.findCategoryByName("Fresh"));
+
+        productRepository.save(pineapples);
+        productRepository.save(apples);
+    }
+
+    private void SetVendorProducts(){
+
+        // load Products
+        Product pineapples = productRepository.findProductByName("Pineapples");
+        Product apples = productRepository.findProductByName("Apples");
+        Product oranges = productRepository.findProductByName("Oranges");
+
+        Vendor v1 = vendorRepository.findVendorByName("Western Tasty Fruits Ltd.");
+        v1.addProduct(pineapples);
+        v1.addProduct(apples);
+
+        Vendor v2 = vendorRepository.findVendorByName("Exotic Fruits Company");
+        v2.addProduct(oranges);
+
+        vendorRepository.save(v1);
+        vendorRepository.save(v2);
     }
 }

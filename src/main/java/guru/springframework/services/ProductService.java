@@ -17,4 +17,6 @@ public interface ProductService {
     ProductDTO patchProduct(Long id, ProductDTO productDTO);
 
     void deleteProductById(Long id);
+
+    List<ProductDTO> findProductByVendorId(Long id);
 }

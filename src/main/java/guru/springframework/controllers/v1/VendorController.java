@@ -1,7 +1,9 @@
 package guru.springframework.controllers.v1;
 
+import guru.springframework.api.v1.model.ProductListDTO;
 import guru.springframework.api.v1.model.VendorDTO;
 import guru.springframework.api.v1.model.VendorListDTO;
+import guru.springframework.services.ProductService;
 import guru.springframework.services.VendorService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -13,9 +15,11 @@ public class VendorController {
     public static final String BASE_URL = "/api/v1/vendors";
 
     private final VendorService vendorService;
+    private final ProductService productService;
 
-    public VendorController(VendorService vendorService) {
+    public VendorController(VendorService vendorService, ProductService productService) {
         this.vendorService = vendorService;
+        this.productService = productService;
     }
 
     @GetMapping()
@@ -52,6 +56,13 @@ public class VendorController {
     @ResponseStatus(HttpStatus.OK)
     public void deleteVendor(@PathVariable Long id){
         vendorService.deleteVendor(id);
+    }
+
+    // Products
+    @GetMapping("/{id}/products")
+    @ResponseStatus(HttpStatus.OK)
+    public ProductListDTO getProductsByVendorId(@PathVariable Long id){
+        return new ProductListDTO(productService.findProductByVendorId(id));
     }
 
 }
