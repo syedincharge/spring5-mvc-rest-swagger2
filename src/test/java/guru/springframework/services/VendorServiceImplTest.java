@@ -1,15 +1,13 @@
 package guru.springframework.services;
 
+import guru.springframework.api.v1.mapper.ProductMapper;
 import guru.springframework.api.v1.mapper.VendorMapper;
 import guru.springframework.api.v1.model.VendorDTO;
-import guru.springframework.api.v1.model.VendorListDTO;
 import guru.springframework.domain.Vendor;
 import guru.springframework.repositories.VendorRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import java.util.Arrays;
@@ -31,7 +29,7 @@ class VendorServiceImplTest {
 
         MockitoAnnotations.initMocks(this);
 
-        vendorService = new VendorServiceImpl(VendorMapper.INSTANCE, vendorRepository);
+        vendorService = new VendorServiceImpl(VendorMapper.INSTANCE, vendorRepository, ProductMapper.INSTANCE);
     }
 
     @Test

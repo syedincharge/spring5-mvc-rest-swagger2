@@ -1,5 +1,6 @@
 package guru.springframework.services;
 
+import guru.springframework.api.v1.model.ProductDTO;
 import guru.springframework.api.v1.model.VendorDTO;
 import guru.springframework.api.v1.model.VendorListDTO;
 import guru.springframework.domain.Product;
@@ -20,5 +21,7 @@ public interface VendorService {
     VendorDTO patchVendor(Long id, VendorDTO vendorDTO);
 
     void deleteVendor(Long id);
+
+    List<ProductDTO> getProductByVendorId(Long id);
 
 }

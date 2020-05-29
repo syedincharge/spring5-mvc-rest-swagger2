@@ -1,16 +1,14 @@
 package guru.springframework.services;
 
+import guru.springframework.api.v1.mapper.ProductMapper;
 import guru.springframework.api.v1.mapper.VendorMapper;
+import guru.springframework.api.v1.model.ProductDTO;
 import guru.springframework.api.v1.model.VendorDTO;
-import guru.springframework.api.v1.model.VendorListDTO;
-import guru.springframework.domain.Product;
 import guru.springframework.domain.Vendor;
 import guru.springframework.repositories.VendorRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -18,10 +16,12 @@ public class VendorServiceImpl implements VendorService {
 
     private final VendorRepository vendorRepository;
     private final VendorMapper vendorMapper;
+    private final ProductMapper productMapper;
 
-    public VendorServiceImpl(VendorMapper vendorMapper, VendorRepository vendorRepository) {
+    public VendorServiceImpl(VendorMapper vendorMapper, VendorRepository vendorRepository, ProductMapper productMapper) {
         this.vendorRepository = vendorRepository;
         this.vendorMapper = vendorMapper;
+        this.productMapper = productMapper;
     }
 
     @Override
@@ -92,6 +92,20 @@ public class VendorServiceImpl implements VendorService {
     @Override
     public void deleteVendor(Long id) {
         vendorRepository.deleteById(id);
+    }
+
+    @Override
+    public List<ProductDTO> getProductByVendorId(Long id) {
+        return vendorRepository.findById(id)
+                .map(vendor -> {
+                    return vendor.getProducts()
+                            .stream()
+                            .map(product -> {
+
+                                ProductDTO productDTO = productMapper.productToProductDTO(product);
+                                return productDTO;
+                            }).collect(Collectors.toList());
+                }).orElseThrow(ResourceNotFoundException::new);
     }
 
     public static String getVendorURL(Long id){

@@ -18,5 +18,4 @@ public interface ProductService {
 
     void deleteProductById(Long id);
 
-    List<ProductDTO> findProductByVendorId(Long id);
 }

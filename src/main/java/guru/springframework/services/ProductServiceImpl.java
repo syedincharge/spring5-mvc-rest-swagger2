@@ -90,15 +90,15 @@ public class ProductServiceImpl implements ProductService {
         productRepository.deleteById(id);
     }
 
-    @Override
-    public List<ProductDTO> findProductByVendorId(Long id) {
-        return productRepository.findProductByVendorId(id)
-                .stream()
-                .map(product -> {
-                    ProductDTO productDTO = productMapper.productToProductDTO(product);
-                    return productDTO;
-                }).collect(Collectors.toList());
-    }
+//    @Override
+//    public List<ProductDTO> findProductByVendorId(Long id) {
+//        return productRepository.findProductByVendorId(id)
+//                .stream()
+//                .map(product -> {
+//                    ProductDTO productDTO = productMapper.productToProductDTO(product);
+//                    return productDTO;
+//                }).collect(Collectors.toList());
+//    }
 
     public static String getProductUrl(Long id){
         return "/shop/products/" + id;
