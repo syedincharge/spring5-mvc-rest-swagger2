@@ -7,7 +7,8 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
-//@ComponentScan(basePackages = {"guru.*"})
+@ComponentScan("guru.springframework.config.swagger")
+@ComponentScan(basePackages = {"guru.*"})
 @EntityScan(basePackages = {"guru.*"})
 @EnableJpaRepositories(basePackages = {"guru.*"})
 public class Spring5MvcRestApplication {
